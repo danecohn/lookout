@@ -1,0 +1,60 @@
+name: Verify and release Lookout
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+            label: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+            label: x64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Test core models
+        run: swift test
+      - name: Build, ad-hoc sign, and verify disk image
+        run: bash scripts/package-macos.sh '${{ matrix.arch }}'
+      - name: Native WebKit fixture test
+        run: |
+          python3 scripts/fixture.py 4397 > /tmp/fixture.log 2>&1 &
+          fixture=$!
+          trap 'kill "$fixture" || true' EXIT
+          sleep 1
+          'release/${{ matrix.label }}/Artemis Lookout.app/Contents/MacOS/Lookout' --self-test --fixture-origin http://127.0.0.1:4397 > /tmp/lookout-selftest.log 2>&1 &
+          browser=$!
+          for i in $(seq 1 60); do if ! kill -0 "$browser" 2>/dev/null; then break; fi; sleep 1; done
+          if kill -0 "$browser" 2>/dev/null; then kill "$browser"; cat /tmp/lookout-selftest.log; exit 1; fi
+          wait "$browser"
+          cat /tmp/lookout-selftest.log
+          grep -q LOOKOUT_SELF_TEST_PASS /tmp/lookout-selftest.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Lookout-${{ matrix.label }}
+          path: artifacts/*
+  publish:
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: mac
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Publish both verified Mac builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create 'v0.1.0' --target '${{ github.sha }}' --repo '${{ github.repository }}' --title 'Artemis Lookout v0.1.0' --notes 'Native macOS WebKit browser by Artemis Softworks LLC. Vertical tabs, spaces, focus trails, a reference pane, saved trail Markdown exports, private windows, Artemisearch default, and Kagi choice. macOS 14 or later. Separate Apple silicon and Intel builds, ad-hoc signed and integrity verified. These builds are not Apple Developer ID signed or notarized; macOS may require the user to approve opening them in Privacy & Security. Source and build scripts are included in the repository.' artifacts/*
