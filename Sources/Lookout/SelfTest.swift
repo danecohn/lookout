@@ -8,12 +8,14 @@ import LookoutCore
         setbuf(stdout,nil)
         NSApp.activate(ignoringOtherApps:true)
         let data=WKWebsiteDataStore.nonPersistent();let config=WKWebViewConfiguration();config.websiteDataStore=data
+        let probe=FixtureProbe()
         let view=WKWebView(frame:NSRect(x:0,y:0,width:900,height:650),configuration:config)
+        view.navigationDelegate=probe
         let window=NSWindow(contentRect:view.frame,styleMask:[.titled],backing:.buffered,defer:false);window.contentView=view;window.makeKeyAndOrderFront(nil)
         do {
             let args=CommandLine.arguments;guard let index=args.firstIndex(of:"--fixture-origin"),index+1<args.count,let origin=URL(string:args[index+1]),["localhost","127.0.0.1"].contains(origin.host ?? "") else{throw TestError.failed("Pass --fixture-origin loopback URL")}
             view.load(URLRequest(url:origin.appendingPathComponent("a")))
-            print("SELFTEST stage A");try await until{view.title=="Lookout Fixture A" && !view.isLoading}
+            print("SELFTEST stage A");try await until{if let failure=probe.failure { print("Fixture navigation error: \(failure)") };return view.title=="Lookout Fixture A" && !view.isLoading}
             _=try await view.evaluateJavaScript("document.cookie='lookout_fixture=one; path=/'; document.title")
             print("SELFTEST stage B");view.load(URLRequest(url:origin.appendingPathComponent("b")));try await until{view.title=="Lookout Fixture B" && !view.isLoading}
             guard view.canGoBack else{throw TestError.failed("Back history missing")};view.goBack();try await until{view.title=="Lookout Fixture A" && !view.isLoading}
@@ -26,4 +28,11 @@ import LookoutCore
     }
     enum TestError:Error{case failed(String)}
     static func until(file:StaticString=#fileID,line:UInt=#line,_ condition:()->Bool)async throws{for _ in 0..<400{if condition(){return};try await Task.sleep(nanoseconds:100_000_000)};throw TestError.failed("WebKit timed out at \(file):\(line)")}
+}
+
+@MainActor final class FixtureProbe:NSObject,WKNavigationDelegate {
+ var failure:String?
+ func webView(_ view:WKWebView,didFailProvisionalNavigation navigation:WKNavigation!,withError error:Error){failure=error.localizedDescription;print("Fixture failure: \(error)")}
+ func webView(_ view:WKWebView,didFinish navigation:WKNavigation!){print("Fixture finished: \(view.url?.absoluteString ?? "") title=\(view.title ?? "")")}
+ func webViewWebContentProcessDidTerminate(_ view:WKWebView){print("Fixture web content process terminated")}
 }

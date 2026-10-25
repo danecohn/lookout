@@ -31,6 +31,8 @@ jobs:
           fixture=$!
           trap 'kill "$fixture" || true' EXIT
           sleep 1
+          curl -fsS http://127.0.0.1:4397/a
+          sw_vers
           'release/${{ matrix.label }}/Artemis Lookout.app/Contents/MacOS/Lookout' --self-test --fixture-origin http://127.0.0.1:4397 > /tmp/lookout-selftest.log 2>&1 &
           browser=$!
           for i in $(seq 1 120); do if ! kill -0 "$browser" 2>/dev/null; then break; fi; sleep 1; done
@@ -38,6 +40,7 @@ jobs:
           status=0
           wait "$browser" || status=$?
           cat /tmp/lookout-selftest.log
+          cat /tmp/fixture.log
           test "$status" -eq 0
           grep -q LOOKOUT_SELF_TEST_PASS /tmp/lookout-selftest.log
       - uses: actions/upload-artifact@v4
