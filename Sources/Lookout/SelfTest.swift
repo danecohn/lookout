@@ -5,9 +5,11 @@ import LookoutCore
 @MainActor enum SelfTest {
     static func run() async {
         // Owned loopback fixture only; no user's persisted website data is opened.
+        setbuf(stdout,nil)
+        NSApp.activate(ignoringOtherApps:true)
         let data=WKWebsiteDataStore.nonPersistent();let config=WKWebViewConfiguration();config.websiteDataStore=data
         let view=WKWebView(frame:NSRect(x:0,y:0,width:900,height:650),configuration:config)
-        let window=NSWindow(contentRect:view.frame,styleMask:[.titled],backing:.buffered,defer:false);window.contentView=view;window.orderFront(nil)
+        let window=NSWindow(contentRect:view.frame,styleMask:[.titled],backing:.buffered,defer:false);window.contentView=view;window.makeKeyAndOrderFront(nil)
         do {
             let args=CommandLine.arguments;guard let index=args.firstIndex(of:"--fixture-origin"),index+1<args.count,let origin=URL(string:args[index+1]),["localhost","127.0.0.1"].contains(origin.host ?? "") else{throw TestError.failed("Pass --fixture-origin loopback URL")}
             view.load(URLRequest(url:origin.appendingPathComponent("a")))
@@ -23,5 +25,5 @@ import LookoutCore
         }catch{fputs("LOOKOUT_SELF_TEST_FAIL: \(error)\n",stderr);exit(1)}
     }
     enum TestError:Error{case failed(String)}
-    static func until(_ condition:()->Bool)async throws{for _ in 0..<400{if condition(){return};try await Task.sleep(nanoseconds:100_000_000)};throw TestError.failed("WebKit timed out")}
+    static func until(file:StaticString=#fileID,line:UInt=#line,_ condition:()->Bool)async throws{for _ in 0..<400{if condition(){return};try await Task.sleep(nanoseconds:100_000_000)};throw TestError.failed("WebKit timed out at \(file):\(line)")}
 }
