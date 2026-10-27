@@ -7,9 +7,9 @@ static func main()throws{
  check(try AddressResolver.resolve("localhost:4397")?.scheme=="http","loopback")
  for unsafe in ["javascript:alert(1)","data:text/html,x","file:///etc/passwd"]{do{_=try AddressResolver.resolve(unsafe);fatalError("unsafe URL accepted")}catch{checks+=1}}
  check(AddressResolver.persisted(URL(string:"https://a.test/?token=secret"))==nil,"token persistence")
- check(SearchProvider.artemisearch.search("a & b").host=="www.amerika.social","Cohnsoft Search default route")
+ check(SearchProvider.artemisearch.search("a & b").host=="www.amerika.social","Vigil Search default route")
  check(try JSONDecoder().decode(SearchProvider.self,from:Data("\"artemisearch\"".utf8)) == .artemisearch,"legacy engine preference decoding")
- check(SearchProvider.artemisearch.label=="Cohnsoft Search","current search display name")
+ check(SearchProvider.artemisearch.label=="Vigil Search","current search display name")
  check(SearchProvider.kagi.search("test").host=="kagi.com","Kagi choice")
  var archive=Archive(windows:[.fresh()]);archive.addVisit(URL(string:"https://a.test")!,title:"Secret",privateMode:true);check(archive.history.isEmpty,"private history")
  let space=archive.windows[0].activeSpaceID;let root=TabRecord(spaceID:space,address:"https://a.test");let child=TabRecord(spaceID:space,parentID:root.id);check(TrailGraph.branch(selected:child.id,tabs:[root,child]).count==2,"connected trail")

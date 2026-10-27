@@ -12,7 +12,7 @@ public enum LookoutError: Error, LocalizedError {
 }
 public enum SearchProvider: String, Codable, CaseIterable {
     case artemisearch, altstack, kagi, duckduckgo, google
-    public var label: String { switch self { case .artemisearch: return "Cohnsoft Search"; case .altstack: return "Cohnsoft Search (legacy preference)"; case .kagi: return "Kagi"; case .duckduckgo: return "DuckDuckGo"; case .google: return "Google" } }
+    public var label: String { switch self { case .artemisearch: return "Vigil Search"; case .altstack: return "Vigil Search (legacy preference)"; case .kagi: return "Kagi"; case .duckduckgo: return "DuckDuckGo"; case .google: return "Google" } }
     public func search(_ query: String) -> URL {
         var parts = URLComponents(string: (self == .artemisearch || self == .altstack) ? "https://www.amerika.social/search/" : self == .kagi ? "https://kagi.com/search" : self == .duckduckgo ? "https://duckduckgo.com/" : "https://www.google.com/search")!
         parts.queryItems = [URLQueryItem(name: "q", value: query)]
@@ -104,7 +104,7 @@ public struct TrailRecord: Codable, Identifiable, Equatable {
         self.name=String(name.prefix(100)); self.purpose=String(purpose.prefix(10000)); self.pages=tabs.compactMap { tab in guard let address=AddressResolver.persisted(tab.safeURL) else { return nil }; return TrailPage(title:tab.title,address:address) }
     }
     public var markdown: String {
-        "# \(name)\n\n\(purpose)\n\n## Sources\n\n" + pages.enumerated().map { "\($0.offset+1). [\($0.element.title.replacingOccurrences(of:"]",with:"\\]"))](\($0.element.address))" }.joined(separator:"\n") + "\n\n---\nSaved with Cohnsoft Lookout · Cohnsoft\n"
+        "# \(name)\n\n\(purpose)\n\n## Sources\n\n" + pages.enumerated().map { "\($0.offset+1). [\($0.element.title.replacingOccurrences(of:"]",with:"\\]"))](\($0.element.address))" }.joined(separator:"\n") + "\n\n---\nSaved with Vigil Lookout · VigilTech\n"
     }
 }
 public struct Archive: Codable {

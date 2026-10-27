@@ -1,15 +1,17 @@
-# Cohnsoft Lookout
+<p align="center"><img src="assets/Lookout.png" width="128" alt="Vigil Lookout icon"></p>
 
-A native macOS WebKit browser by **Cohnsoft**, founded by **Demetria Althea Cohn**. Original application source; the system WebKit framework supplies the engine. macOS 14+, Apple silicon and Intel.
+# Vigil Lookout
+
+A native macOS WebKit browser by **VigilTech** (vigiltech.org), founded by **Demetria Althea Cohn**. Original application source; the system WebKit framework supplies the engine. macOS 14+, Apple silicon and Intel.
 
 - Vertical tabs, pinned pages, named spaces, and a cross-space tab finder (⌘K).
 - **Focus trails**: related opener tabs stay together; focus one connected trail without losing other pages.
 - **Reference pane**: keep one page beside the main page while continuing your research.
 - **Saved trails**: save related source links with a purpose, resume in a new space, or export readable Markdown for Mind or Prompter. No page scraping or AI account required.
-- **Cohnsoft Search** is the default at the existing search route while its domain is chosen. Switch to Kagi, DuckDuckGo, or Google in Settings. Kagi may require your own account; no subscription is bundled.
+- **Vigil Search** is the default at the existing search route while its domain is chosen. Switch to Kagi, DuckDuckGo, or Google in Settings. Kagi may require your own account; no subscription is bundled.
 - Real WebKit navigation, gesture history, downloads with save dialogs, find, print/PDF, zoom, JavaScript dialogs, and file upload dialogs.
 - Regular windows restore tabs lazily. Private windows use an isolated temporary website store and save no history, tabs, or trails. Downloads still create files you choose.
-- Native translucent sidebar and original illustrated telescope icon with the Cohnsoft product icon style.
+- Native translucent sidebar and original illustrated telescope icon with the VigilTech product icon style.
 
 ## Build and test
 
@@ -25,9 +27,10 @@ TLS uses the default system trust evaluation; there is no invalid-certificate by
 
 This is a new, macOS-focused product. Existing Venture releases remain separate; Lookout does not mislabel those Windows/Linux builds as WebKit releases.
 
-[GPL-3.0-only](LICENSE) · [Third-party notices](NOTICE.md) · [Cohnsoft Search source and attribution](https://github.com/danecohn/Artemisearch)
+[GPL-3.0-only](LICENSE) · [Third-party notices](NOTICE.md) · [Vigil Search source and attribution](https://github.com/danecohn/Artemisearch)
 
-Cohnsoft Lookout 0.1.1 retains the existing bundle identifier, legacy session path,
+Vigil Lookout 0.1.1 retains the existing bundle identifier, legacy session path,
 search-provider preference values and installer filenames for upgrade compatibility.
-Canonical company assets and Cohn Sans are pinned to cohnsoftassets commit
-`752e894f90f1e58e62ae466352cb03c8bfd7d703`.
+The interface uses the VigilTech design tokens (`Sources/Lookout/Theme.swift`) and Vigil Sans; brand files are in `assets/vigiltech`.
+
+A product of VigilTech, vigiltech.org.
