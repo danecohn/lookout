@@ -1,5 +1,7 @@
 name: Verify and release Vigil Lookout
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     tags: ['v*']
@@ -64,4 +66,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create 'v0.1.1' --target '${{ github.sha }}' --repo '${{ github.repository }}' --title 'Vigil Lookout v0.1.1' --notes 'Native macOS WebKit browser by VigilTech. Vertical tabs, spaces, focus trails, a reference pane, saved trail Markdown exports, private windows, Vigil Search default, and Kagi choice. macOS 14 or later. Separate Apple silicon and Intel builds, ad-hoc signed and integrity verified. These builds are not Apple Developer ID signed or notarized; macOS may require the user to approve opening them in Privacy & Security. Source and build scripts are included in the repository.' artifacts/*
+          gh release create 'v0.1.2' --target '${{ github.sha }}' --repo '${{ github.repository }}' --title 'Vigil Lookout v0.1.2' --notes 'Native macOS WebKit browser by VigilTech. Vertical tabs, spaces, focus trails, a reference pane, saved trail Markdown exports, private windows, Vigil Search default, and Kagi choice. macOS 14 or later. Separate Apple silicon and Intel builds, ad-hoc signed and integrity verified. These builds are not Apple Developer ID signed or notarized; macOS may require the user to approve opening them in Privacy & Security. Source and build scripts are included in the repository.' artifacts/*

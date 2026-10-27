@@ -50,7 +50,7 @@ import LookoutCore
         let window=menu("Window");window.addItem(NSMenuItem(title:"Minimize",action:#selector(NSWindow.performMiniaturize(_:)),keyEquivalent:"m"));window.addItem(NSMenuItem(title:"Zoom",action:#selector(NSWindow.performZoom(_:)),keyEquivalent:""));NSApp.windowsMenu=window
         let help=menu("Help");item(help,"Lookout Source & Help",#selector(helpSource))
     }
-    @objc func about(){NSApp.orderFrontStandardAboutPanel(options:[.applicationName:"Vigil Lookout",.applicationVersion:"0.1.1",.credits:NSAttributedString(string:"VigilTech, vigiltech.org\nDemetria Althea Cohn\nNative WebKit browsing. Original app source under GPL-3.0-only.")])}
+    @objc func about(){NSApp.orderFrontStandardAboutPanel(options:[.applicationName:"Vigil Lookout",.applicationVersion:"0.1.2",.credits:NSAttributedString(string:"VigilTech, vigiltech.org\nDemetria Althea Cohn\nNative WebKit browsing. Original app source under GPL-3.0-only.")])}
     @objc func settings(){active?.panel="settings"}
     @objc func newTab(){_=active?.newTab();active?.addressFocus=true}
     @objc func regular(){newWindow()}
