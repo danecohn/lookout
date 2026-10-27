@@ -1,4 +1,4 @@
-name: Verify and release Lookout
+name: Verify and release Cohnsoft Lookout
 on:
   push:
     branches: [main]
@@ -33,7 +33,7 @@ jobs:
           sleep 1
           curl -fsS http://127.0.0.1:4397/a
           sw_vers
-          'release/${{ matrix.label }}/Artemis Lookout.app/Contents/MacOS/Lookout' --self-test --fixture-origin http://127.0.0.1:4397 > /tmp/lookout-selftest.log 2>&1 &
+          'release/${{ matrix.label }}/Cohnsoft Lookout.app/Contents/MacOS/Lookout' --self-test --fixture-origin http://127.0.0.1:4397 > /tmp/lookout-selftest.log 2>&1 &
           browser=$!
           for i in $(seq 1 120); do if ! kill -0 "$browser" 2>/dev/null; then break; fi; sleep 1; done
           if kill -0 "$browser" 2>/dev/null; then kill "$browser"; cat /tmp/lookout-selftest.log; exit 1; fi
@@ -62,4 +62,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create 'v0.1.0' --target '${{ github.sha }}' --repo '${{ github.repository }}' --title 'Artemis Lookout v0.1.0' --notes 'Native macOS WebKit browser by Artemis Softworks LLC. Vertical tabs, spaces, focus trails, a reference pane, saved trail Markdown exports, private windows, Artemisearch default, and Kagi choice. macOS 14 or later. Separate Apple silicon and Intel builds, ad-hoc signed and integrity verified. These builds are not Apple Developer ID signed or notarized; macOS may require the user to approve opening them in Privacy & Security. Source and build scripts are included in the repository.' artifacts/*
+          gh release create 'v0.1.1' --target '${{ github.sha }}' --repo '${{ github.repository }}' --title 'Cohnsoft Lookout v0.1.1' --notes 'Native macOS WebKit browser by Cohnsoft. Vertical tabs, spaces, focus trails, a reference pane, saved trail Markdown exports, private windows, Cohnsoft Search default, and Kagi choice. macOS 14 or later. Separate Apple silicon and Intel builds, ad-hoc signed and integrity verified. These builds are not Apple Developer ID signed or notarized; macOS may require the user to approve opening them in Privacy & Security. Source and build scripts are included in the repository.' artifacts/*
