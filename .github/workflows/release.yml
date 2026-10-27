@@ -22,7 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Test core models
-        run: swift test
+        run: |
+          swift test
+          python3 scripts/test-fixture.py
       - name: Build, ad-hoc sign, and verify disk image
         run: bash scripts/package-macos.sh '${{ matrix.arch }}'
       - name: Native WebKit fixture test
