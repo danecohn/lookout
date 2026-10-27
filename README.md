@@ -29,7 +29,7 @@ This is a new, macOS-focused product. Existing Venture releases remain separate;
 
 [GPL-3.0-only](LICENSE) · [Third-party notices](NOTICE.md) · [Vigil Search source and attribution](https://github.com/danecohn/Artemisearch)
 
-Vigil Lookout 0.1.1 retains the existing bundle identifier, legacy session path,
+Vigil Lookout 0.1.2 retains the existing bundle identifier, legacy session path,
 search-provider preference values and installer filenames for upgrade compatibility.
 The interface uses the VigilTech design tokens (`Sources/Lookout/Theme.swift`) and Vigil Sans; brand files are in `assets/vigiltech`.
 
